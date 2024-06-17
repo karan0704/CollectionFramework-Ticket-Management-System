@@ -1,19 +1,18 @@
 package collection;
 
 import modelTicket.TicketModel;
-
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Comparator;
 import java.util.List;
 
 public class TicketCollection {
-    private List<TicketModel> tickets;
+    private final List<TicketModel> tickets;
     private int nextTicketID;
 
     public TicketCollection() {
-        tickets = new ArrayList<>();
-        nextTicketID = 1;
+        this.tickets = new ArrayList<>();
+        this.nextTicketID = 1;
     }
 
     public int generateNextTicketID() {
@@ -24,25 +23,21 @@ public class TicketCollection {
         tickets.add(ticket);
     }
 
-    public List<TicketModel> getAllTickets() {
-        return tickets;
-    }
-
     public List<TicketModel> getAllTicketsSortedById() {
         List<TicketModel> sortedTickets = new ArrayList<>(tickets);
-        Collections.sort(sortedTickets, Comparator.comparingInt(TicketModel::getTicketID));
+        sortedTickets.sort(Comparator.comparingInt(TicketModel::getTicketID));
         return sortedTickets;
     }
 
     public List<TicketModel> getAllTicketsSortedByCustomerName() {
         List<TicketModel> sortedTickets = new ArrayList<>(tickets);
-        Collections.sort(sortedTickets, Comparator.comparing(TicketModel::getCustomerName));
+        sortedTickets.sort(Comparator.comparing(TicketModel::getCustomerName));
         return sortedTickets;
     }
 
     public TicketModel searchTicketByTitle(String title) {
         for (TicketModel ticket : tickets) {
-            if (ticket.getTicketTitle().equalsIgnoreCase(title)) {
+            if (containsMatchingSubstring(ticket.getTicketTitle(), title, 4)) {
                 return ticket;
             }
         }
@@ -58,7 +53,25 @@ public class TicketCollection {
         return null;
     }
 
-    public boolean deleteTicketBySixDigitNumber(int sixDigitTicketNumber) {
-        return tickets.removeIf(ticket -> ticket.getSixDigitTicketNumber() == sixDigitTicketNumber);
+    public boolean deleteTicketBySixDigitNumber(int sixDigitNumber) {
+        return tickets.removeIf(ticket -> ticket.getSixDigitTicketNumber() == sixDigitNumber);
+    }
+
+    private boolean containsMatchingSubstring(String source, String target, int minMatchLength) {
+        if (source == null || target == null) {
+            return false;
+        }
+
+        source = source.toLowerCase();
+        target = target.toLowerCase();
+
+        for (int i = 0; i <= source.length() - minMatchLength; i++) {
+            String substring = source.substring(i, i + minMatchLength);
+            if (target.contains(substring)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
