@@ -6,6 +6,11 @@ public class TicketModel {
     private int sixDigitTicketNumber;
     private String ticketTitle;
     private String ticketIssue;
+    private String ticketStatus; // Added ticket status variable
+
+    public TicketModel() {
+        this.ticketStatus = "open"; // Default status is "open"
+    }
 
     // Getters and Setters
     public int getTicketID() {
@@ -48,6 +53,14 @@ public class TicketModel {
         this.ticketIssue = ticketIssue;
     }
 
+    public String getTicketStatus() {
+        return ticketStatus;
+    }
+
+    public void setTicketStatus(String ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
     @Override
     public String toString() {
         return "TicketModel{" +
@@ -56,6 +69,7 @@ public class TicketModel {
                 ", sixDigitTicketNumber=" + sixDigitTicketNumber +
                 ", ticketTitle='" + ticketTitle + '\'' +
                 ", ticketIssue='" + ticketIssue + '\'' +
+                ", ticketStatus='" + ticketStatus + '\'' +
                 '}';
     }
 }

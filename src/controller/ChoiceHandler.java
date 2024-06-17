@@ -22,8 +22,9 @@ public class ChoiceHandler {
             System.out.println("1. Create a new ticket");
             System.out.println("2. View all tickets");
             System.out.println("3. Search for a ticket");
-            System.out.println("4. Delete a ticket");
-            System.out.println("5. Exit");
+            System.out.println("4. Change ticket status");
+            System.out.println("5. Delete a ticket");
+            System.out.println("6. Exit");
 
             int choice = getChoice();
 
@@ -38,9 +39,12 @@ public class ChoiceHandler {
                     searchTicket();
                     break;
                 case 4:
-                    deleteTicket();
+                    changeTicketStatus();
                     break;
                 case 5:
+                    deleteTicket();
+                    break;
+                case 6:
                     System.out.println("Exiting...");
                     return;
                 default:
@@ -87,14 +91,14 @@ public class ChoiceHandler {
     }
 
     private void displayTickets(Iterable<TicketModel> tickets) {
-        System.out.printf("%-10s | %-20s | %-15s | %-20s | %-30s%n",
-                "Ticket ID", "Customer Name", "Ticket Number", "Ticket Title", "Ticket Issue");
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.printf("%-10s | %-20s | %-15s | %-20s | %-30s | %-10s%n",
+                "Ticket ID", "Customer Name", "Ticket Number", "Ticket Title", "Ticket Issue", "Ticket Status");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------");
 
         for (TicketModel ticket : tickets) {
-            System.out.printf("%-10d | %-20s | %-15d | %-20s | %-30s%n",
+            System.out.printf("%-10d | %-20s | %-15d | %-20s | %-30s | %-10s%n",
                     ticket.getTicketID(), ticket.getCustomerName(), ticket.getSixDigitTicketNumber(),
-                    ticket.getTicketTitle(), ticket.getTicketIssue());
+                    ticket.getTicketTitle(), ticket.getTicketIssue(), ticket.getTicketStatus());
         }
     }
 
@@ -128,6 +132,20 @@ public class ChoiceHandler {
                 break;
             default:
                 System.out.println("Invalid choice. Returning to main menu.");
+        }
+    }
+
+    private void changeTicketStatus() {
+        System.out.print("Enter Ticket ID to change status: ");
+        int ticketID = getChoice();
+        TicketModel ticket = collection.searchTicketByID(ticketID);
+        if (ticket != null) {
+            String currentStatus = ticket.getTicketStatus();
+            String newStatus = currentStatus.equals("open") ? "closed" : "open";
+            ticket.setTicketStatus(newStatus);
+            System.out.println("Ticket status changed successfully.");
+        } else {
+            System.out.println("Ticket not found.");
         }
     }
 
