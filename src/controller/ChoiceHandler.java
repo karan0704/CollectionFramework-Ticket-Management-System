@@ -3,6 +3,7 @@ package controller;
 import collection.TicketCollection;
 import modelTicket.TicketModel;
 
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -72,20 +73,28 @@ public class ChoiceHandler {
         System.out.println("1. Sorted by Ticket ID");
         System.out.println("2. Sorted by Customer Name");
 
-        int choice = getChoice();
-        switch (choice) {
+        int viewChoice = getChoice();
+        switch (viewChoice) {
             case 1:
-                for (TicketModel t : collection.getAllTicketsSortedById()) {
-                    System.out.println(t);
-                }
+                displayTickets(collection.getAllTicketsSortedById());
                 break;
             case 2:
-                for (TicketModel t : collection.getAllTicketsSortedByCustomerName()) {
-                    System.out.println(t);
-                }
+                displayTickets(collection.getAllTicketsSortedByCustomerName());
                 break;
             default:
                 System.out.println("Invalid choice. Returning to main menu.");
+        }
+    }
+
+    private void displayTickets(Iterable<TicketModel> tickets) {
+        System.out.printf("%-10s | %-20s | %-15s | %-20s | %-30s%n",
+                "Ticket ID", "Customer Name", "Ticket Number", "Ticket Title", "Ticket Issue");
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        for (TicketModel ticket : tickets) {
+            System.out.printf("%-10d | %-20s | %-15d | %-20s | %-30s%n",
+                    ticket.getTicketID(), ticket.getCustomerName(), ticket.getSixDigitTicketNumber(),
+                    ticket.getTicketTitle(), ticket.getTicketIssue());
         }
     }
 
@@ -94,15 +103,15 @@ public class ChoiceHandler {
         System.out.println("1. By Ticket Title");
         System.out.println("2. By Ticket ID");
 
-        int choice = getChoice();
-        switch (choice) {
+        int searchChoice = getChoice();
+        switch (searchChoice) {
             case 1:
                 System.out.print("Enter Ticket Title: ");
                 scanner.nextLine(); // Consume newline
                 String title = scanner.nextLine();
                 TicketModel ticketByTitle = collection.searchTicketByTitle(title);
                 if (ticketByTitle != null) {
-                    System.out.println(ticketByTitle);
+                    displayTickets(Collections.singletonList(ticketByTitle));
                 } else {
                     System.out.println("Ticket not found.");
                 }
@@ -112,7 +121,7 @@ public class ChoiceHandler {
                 int ticketID = getChoice();
                 TicketModel ticketByID = collection.searchTicketByID(ticketID);
                 if (ticketByID != null) {
-                    System.out.println(ticketByID);
+                    displayTickets(Collections.singletonList(ticketByID));
                 } else {
                     System.out.println("Ticket not found.");
                 }
